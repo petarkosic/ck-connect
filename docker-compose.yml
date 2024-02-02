@@ -1,0 +1,68 @@
+version: '3'
+
+services:
+  consul:
+    image: hashicorp/consul
+    container_name: ck-consul
+    ports:
+      - '8500:8500'
+    networks:
+      - ck-connect
+
+  kong:
+    image: kong:latest
+    container_name: ck-kong
+    ports:
+      - '8000:8000'
+      - '8001:8001'
+    networks:
+      - ck-connect
+    depends_on:
+      - consul
+    volumes:
+      - ./config/kong.yml:/etc/kong/kong.yml
+    environment:
+      KONG_DATABASE: 'off'
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: '0.0.0.0:8001'
+
+  user-service:
+    build:
+      context: ./user-service
+    container_name: ck-user-service
+    ports:
+      - '3000:3000'
+    networks:
+      - ck-connect
+    depends_on:
+      - consul
+    environment:
+      SERVICE_NAME: 'ck-user-service'
+      SERVICE_TAGS: 'api'
+      SERVICE_CHECK_HTTP: '/health'
+      SERVICE_CHECK_INTERVAL: '10s'
+      SERVICE_CHECK_TIMEOUT: '2s'
+
+  order-service:
+    build:
+      context: ./order-service
+    container_name: ck-order-service
+    ports:
+      - '3001:3001'
+    networks:
+      - ck-connect
+    depends_on:
+      - consul
+    environment:
+      SERVICE_NAME: 'ck-order-service'
+      SERVICE_TAGS: 'api'
+      SERVICE_CHECK_HTTP: '/health'
+      SERVICE_CHECK_INTERVAL: '10s'
+      SERVICE_CHECK_TIMEOUT: '2s'
+
+networks:
+  ck-connect:
