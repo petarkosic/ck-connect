@@ -4,7 +4,7 @@ import Consul from 'consul';
 const app = express();
 const PORT = 3000;
 
-app.get('/users', (req, res) => {
+app.get('/', (req, res) => {
 	res.json({
 		users: [
 			{ id: 1, name: 'John' },
