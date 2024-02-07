@@ -14,8 +14,8 @@ Before running the application, ensure you have the following installed on your 
 Clone this repository to your local machine and navigate to it:
 
 ```bash
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
+git clone https://github.com/petarkosic/ck-connect.git
+cd ck-connect
 ```
 
 Run Docker Compose to build and start the services:
@@ -29,8 +29,8 @@ docker-compose up --build -d
 Once the services are up and running, you can interact with them through Kong's API gateway.
 Here's how to access the services:
 
-**Users Service**: Access user-related functionalities through http://localhost:8000/users.
-**Orders Service**: Access order-related functionalities through http://localhost:8000/orders.
+- **Users Service**: Access user-related functionalities through http://localhost:8000/users.
+- **Orders Service**: Access order-related functionalities through http://localhost:8000/orders.
 
 </br>
 
